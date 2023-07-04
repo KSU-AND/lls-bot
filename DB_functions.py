@@ -48,7 +48,7 @@ if __name__ == "__main__":
         role varchar,
         name varchar, 
         nickname varchar,
-        friend varchar,
+        friend int,
         PRIMARY KEY (id)
     );""")
 
@@ -64,14 +64,14 @@ def toss_is_able():
     return None in friends
 
 def create_toss():
-    query_result = execute_read_query(f"SELECT nickname FROM users "\
+    query_result = execute_read_query(f"SELECT id FROM users "\
                                       f"WHERE state={States.S_FULL}")
-    nicknames = [row[0] for row in query_result]
-    shuffle(nicknames)
-    num_of_nicknames = len(nicknames)
-    for i in range(0, num_of_nicknames, 2):
-        execute_query(f"UPDATE users SET friend='{nicknames[i]}' WHERE nickname='{nicknames[i+1]}'")
-        execute_query(f"UPDATE users SET friend='{nicknames[i+1]}' WHERE nickname='{nicknames[i]}'")
+    ids = [row[0] for row in query_result]
+    shuffle(ids)
+    num_of_ids = len(ids)
+    for i in range(1, num_of_ids, 2):
+        execute_query(f"UPDATE users SET friend={ids[i]} WHERE id={ids[i-1]}")
+        execute_query(f"UPDATE users SET friend={ids[i-1]} WHERE id={ids[i]}")
 
 
 def check_user_in_db(user_id):
