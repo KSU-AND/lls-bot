@@ -38,7 +38,7 @@ def create_full_csv_file():
         query_result = execute_read_query(f"SELECT u.name, u.nickname, f.name, f.nickname "\
                                           f"FROM users as u JOIN users as f ON u.friend = f.id "\
                                           f"WHERE state={States.S_FULL}")
-        csvWriter.writerows(("Пользователь", "", "Собеседник", ""))
+        csvWriter.writerows([("Пользователь", "", "Собеседник", "")])
         csvWriter.writerows(query_result)
 
 if __name__ == "__main__":
