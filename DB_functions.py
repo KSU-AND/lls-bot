@@ -41,8 +41,8 @@ def create_full_csv_file():
         csvWriter.writerows([("Пользователь", "", "Собеседник", "")])
         csvWriter.writerows(query_result)
 
+connection = connect_to_DB("DB.sqlite")
 if __name__ == "__main__":
-    connection = connect_to_DB("DB.sqlite")
     execute_query("""
     CREATE TABLE users (
         id int NOT NULL UNIQUE,
