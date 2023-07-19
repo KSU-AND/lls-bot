@@ -39,7 +39,8 @@ def create_full_csv_file():
                                           f"f.name, f.nickname, f.room "\
                                           f"FROM users as u JOIN users as f ON u.friend = f.id "\
                                           f"WHERE u.state={States.S_FULL}")
-        csvWriter.writerows([("Отправитель", "", "Номер комнаты", "Получатель", "", "Номер комнаты")])
+        csvWriter.writerows([("Отправитель", "Никнейм отп.", "Комната отп.", 
+                              "Получатель", "Никнейм пол.", "Комната пол.")])
         csvWriter.writerows(query_result)
 
 connection = connect_to_DB("DB.sqlite")
