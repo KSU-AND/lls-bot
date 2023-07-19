@@ -50,6 +50,7 @@ if __name__ == "__main__":
         role varchar,
         name varchar, 
         nickname varchar,
+        room varchar,
         friend int,
         PRIMARY KEY (id)
     );""")
@@ -149,6 +150,17 @@ def set_nickname(user_id, nickname):
     
 def get_nickname(user_id):
     query_result = execute_read_query(f"SELECT nickname FROM users WHERE id={user_id}")
+    try:
+        nickname = query_result[0][0]
+        return nickname if nickname else False
+    except:
+        return False
+
+def set_room(user_id, room):
+    execute_query(f"UPDATE users SET room='{room}' WHERE id={user_id}")
+    
+def get_room(user_id):
+    query_result = execute_read_query(f"SELECT room FROM users WHERE id={user_id}")
     try:
         nickname = query_result[0][0]
         return nickname if nickname else False
