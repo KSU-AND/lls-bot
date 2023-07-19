@@ -5,6 +5,7 @@ class States(IntEnum):
     U_ROLE = auto()
     S_NAME = auto()
     S_NICKNAME = auto()
+    S_ROOM = auto()
     S_FULL = auto()
     A_CODE = auto()
     A_FULL = auto()
