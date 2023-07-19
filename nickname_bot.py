@@ -90,19 +90,32 @@ def user_entered_nickname(message):
 
     if check_nickname_in_db(msg_text):
         bot.send_message(user_id, 
-                         "К сожалению, такой псевдоним уже есть. Придумай что-то другое:", 
+                         "К сожалению, такой псевдоним уже есть. Придумай что-то другое.", 
                          reply_markup = create_markup())
     else:
-        set_state(user_id, States.S_FULL)
+        set_state(user_id, States.S_ROOM)
         set_nickname(user_id, msg_text) 
         bot.send_message(user_id, 
                          "Принято! \n"\
-                         "Если забудешь свой псевдоним, можешь вернуться ко мне в любой момент "\
-                         "и я его тебе напомню. Узнать своего собеседника после проведения жеребьевки "\
-                         "тоже можно будет здесь.", 
-                         reply_markup = create_markup(Answers.NICKNAME.value,
-                                                      Answers.FRIEND.value))
+                         "И остался последний шаг. Введи, пожалуйста, номер своей комнаты.", 
+                         reply_markup = create_markup())
         print(f"Пользователь {get_name(user_id)} ввел псевдоним {msg_text}.")
+
+@bot.message_handler(func=lambda message: get_state(message.chat.id) == States.S_ROOM)
+def user_entered_room(message):
+    user_id = message.chat.id
+    msg_text = message.text.strip()
+
+    set_state(user_id, States.S_FULL)
+    set_room(user_id, msg_text) 
+    bot.send_message(user_id, 
+                        "Принято! \n"\
+                        "Если забудешь свой псевдоним, можешь вернуться ко мне в любой "\
+                        "момент и я его тебе напомню. Узнать своего собеседника после "\
+                        "проведения жеребьевки тоже можно будет здесь.", 
+                        reply_markup = create_markup(Answers.NICKNAME.value,
+                                                    Answers.FRIEND.value))
+    print(f"Пользователь {get_name(user_id)} ввел номер комнаты {msg_text}.")
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.A_CODE)
 def user_entered_code(message):

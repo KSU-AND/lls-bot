@@ -35,10 +35,12 @@ def execute_read_query(query):
 def create_full_csv_file():
     with open("full_DB.csv", "w", newline='') as csv_file:
         csvWriter = csv.writer(csv_file, delimiter=';')
-        query_result = execute_read_query(f"SELECT u.name, u.nickname, f.name, f.nickname "\
+        query_result = execute_read_query(f"SELECT u.name, u.nickname, u.room, "\
+                                          f"f.name, f.nickname, f.room "\
                                           f"FROM users as u JOIN users as f ON u.friend = f.id "\
                                           f"WHERE u.state={States.S_FULL}")
-        csvWriter.writerows([("Пользователь", "", "Собеседник", "")])
+        csvWriter.writerows([("Отправитель", "Никнейм отп.", "Комната отп.", 
+                              "Получатель", "Никнейм пол.", "Комната пол.")])
         csvWriter.writerows(query_result)
 
 connection = connect_to_DB("DB.sqlite")
@@ -50,6 +52,7 @@ if __name__ == "__main__":
         role varchar,
         name varchar, 
         nickname varchar,
+        room varchar,
         friend int,
         PRIMARY KEY (id)
     );""")
@@ -149,6 +152,17 @@ def set_nickname(user_id, nickname):
     
 def get_nickname(user_id):
     query_result = execute_read_query(f"SELECT nickname FROM users WHERE id={user_id}")
+    try:
+        nickname = query_result[0][0]
+        return nickname if nickname else False
+    except:
+        return False
+
+def set_room(user_id, room):
+    execute_query(f"UPDATE users SET room='{room}' WHERE id={user_id}")
+    
+def get_room(user_id):
+    query_result = execute_read_query(f"SELECT room FROM users WHERE id={user_id}")
     try:
         nickname = query_result[0][0]
         return nickname if nickname else False
