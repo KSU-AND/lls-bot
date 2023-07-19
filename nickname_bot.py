@@ -198,5 +198,4 @@ def admin_wants(message):
 
 
 if __name__ == "__main__":
-    connection = connect_to_DB("DB.sqlite")
     bot.polling()
