@@ -35,10 +35,11 @@ def execute_read_query(query):
 def create_full_csv_file():
     with open("full_DB.csv", "w", newline='') as csv_file:
         csvWriter = csv.writer(csv_file, delimiter=';')
-        query_result = execute_read_query(f"SELECT u.name, u.nickname, f.name, f.nickname "\
+        query_result = execute_read_query(f"SELECT u.name, u.nickname, u.room, "\
+                                          f"f.name, f.nickname, f.room "\
                                           f"FROM users as u JOIN users as f ON u.friend = f.id "\
                                           f"WHERE u.state={States.S_FULL}")
-        csvWriter.writerows([("Пользователь", "", "Собеседник", "")])
+        csvWriter.writerows([("Отправитель", "", "Номер комнаты", "Получатель", "", "Номер комнаты")])
         csvWriter.writerows(query_result)
 
 connection = connect_to_DB("DB.sqlite")
