@@ -7,9 +7,11 @@ import mysecrets
 def cmd_start(message):
     user_id = message.chat.id
 
-    if not check_user_in_db(user_id) or check_role_is_null(user_id): # TODO #26
+    if not check_user_in_db(user_id) or check_role_is_null(user_id):
         bot.send_message(user_id, 
-                         "Добрый день! "\
+                         "Добро пожаловать! 👋\n\n"\
+                         "Этот бот поможет не потеряться при проведении живой "\
+                         "переписки на Летней Лингвистической Школе.\n\n"\
                          "Для начала давайте определимся, кто Вы?",  
                          reply_markup = create_markup(Answers.STUDENT.value,
                                                       Answers.ADMIN.value))
@@ -17,21 +19,21 @@ def cmd_start(message):
         set_state(user_id, States.U_ROLE)
         print(f"Пользователь id_{user_id} добавлен в базу.")
 
-    elif get_role(user_id) != Roles.STUDENT.value: # TODO #27
+    elif get_role(user_id) != Roles.STUDENT.value:
         set_state(user_id, States.A_CODE)
         bot.send_message(user_id, 
                          "Введите подтверждающий код:\n", 
                          reply_markup = create_markup())
         print(f"Пользователь id_{user_id} пытается ввести код.")
 
-    elif not get_name(user_id): # TODO #29
+    elif not get_name(user_id):
         set_state(user_id, States.S_NAME)
         bot.send_message(user_id, 
                          "Введи, пожалуйста, свои фамилию и имя.\n"\
                          "(Их будут видеть организаторы и почтальон)", 
                          reply_markup = create_markup())
 
-    elif check_nickname_is_null(user_id): # TODO #28
+    elif check_nickname_is_null(user_id):
         set_state(user_id, States.S_NICKNAME)
         bot.send_message(user_id, 
                          f"Привет, {get_name(user_id)}! \n"\
@@ -45,6 +47,28 @@ def cmd_start(message):
                          "какой псевдоним у твоего друга по переписке (если жеребьевка уже была проведена)", 
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))
+
+@bot.message_handler(commands=["help"])
+def cmd_help(message):
+    user_id = message.chat.id
+
+    if toss_is_able():
+        bot.send_message(user_id, 
+                        "Пока не была проведена жеребьевка ты можешь исправить "\
+                        "свое имя, псевдоним и номер комнаты:\n"\
+                        # "/fix_name - исправить имя и фамилию\n"\
+                        "/fix_name - _В_РАЗРАБОТКЕ_\n"\
+                        # "/fix_nickname - исправить псевдоним\n"\
+                        "/fix_nickname - _В_РАЗРАБОТКЕ_\n"\
+                        # "/fix_room - исправить номер комнаты\n\n"\
+                        "/fix_room - _В_РАЗРАБОТКЕ_\n\n"\
+                        "Также ты всегда можешь написать во всем вопросам @mendatsium.")
+    else:
+        bot.send_message(user_id, 
+                         "Поскольку жеребьевка была уже проведена, то, к сожалению, "\
+                         "исправить имя, псевдоним или номер комнаты уже не получиться.\n\n"\
+                         "Но ты всегда можешь написать во всем вопросам @mendatsium.")
+    print(f"Пользователь {get_name(user_id)} вызвал HELP.")
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.U_ROLE)
 def user_entered_role(message):
@@ -147,11 +171,12 @@ def student_wants(message):
 
     if msg_text == Answers.NICKNAME.value:
         bot.send_message(user_id, 
-                         f"Твой псевдоним: {get_nickname(user_id)}", # TODO #32
+                         f"Твой псевдоним: `{get_nickname(user_id)}`",
+                         parse_mode="MarkdownV2",
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))
         print(f"Пользователь {get_name(user_id)} попросил напомнить псевдоним и получил его.")
-    elif msg_text == Answers.FRIEND.value: # TODO #33
+    elif msg_text == Answers.FRIEND.value: 
         friend = get_friend(user_id)
         if friend:
             bot.send_message(user_id, 
@@ -208,7 +233,6 @@ def admin_wants(message):
         create_full_csv_file()
         send_full_csv_file(user_id)
         print(f"admin_{user_id} запросил общий файл с базой и получил его.")
-
 
 if __name__ == "__main__":
     bot.infinity_polling(timeout = 10, long_polling_timeout = 5) # почему-то везде рекомендуют такие значения
