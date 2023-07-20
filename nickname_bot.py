@@ -147,15 +147,18 @@ def student_wants(message):
 
     if msg_text == Answers.NICKNAME.value:
         bot.send_message(user_id, 
-                         f"Твой псевдоним: {get_nickname(user_id)}", # TODO #32
+                         f"Твой псевдоним: {get_nickname(user_id)}",
+                         parse_mode="MarkdownV2",
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))
         print(f"Пользователь {get_name(user_id)} попросил напомнить псевдоним и получил его.")
     elif msg_text == Answers.FRIEND.value: # TODO #33
         friend = get_friend(user_id)
         if friend:
+            friend = get_nickname(friend)
             bot.send_message(user_id, 
-                         f"Псевдоним твоего собеседника: {friend}", 
+                         f"Псевдоним твоего собеседника: `{friend}`",
+                         parse_mode="MarkdownV2",
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))
             print(f"Пользователь {get_name(user_id)} попросил псевдоним друга и получил его.")
