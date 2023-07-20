@@ -57,7 +57,7 @@ def cmd_help(message):
                      "Твои данные:\n"
                      f"Имя: `{get_name(user_id)}`\n"
                      f"Псевдоним: `{get_nickname(user_id)}`\n"
-                     f"Комнаты: `{get_room(user_id)}`\n"
+                     f"Комната: `{get_room(user_id)}`\n"
                      f"Друг по переписке: {friend}",
                      parse_mode="MarkdownV2")
 
