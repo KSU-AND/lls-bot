@@ -211,4 +211,4 @@ def admin_wants(message):
 
 
 if __name__ == "__main__":
-    bot.polling()
+    bot.infinity_polling(timeout = 10, long_polling_timeout = 5) # почему-то везде рекомендуют такие значения
