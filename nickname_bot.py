@@ -51,6 +51,15 @@ def cmd_start(message):
 @bot.message_handler(commands=["help"])
 def cmd_help(message):
     user_id = message.chat.id
+    friend = get_friend(user_id)
+    friend = ("`" + get_nickname(friend) + "`") if friend else "пока неизвестно"
+    bot.send_message(user_id,
+                     "Твои данные:\n"
+                     f"Имя: `{get_name(user_id)}`\n"
+                     f"Псевдоним: `{get_nickname(user_id)}`\n"
+                     f"Комнаты: `{get_room(user_id)}`\n"
+                     f"Друг по переписке: {friend}",
+                     parse_mode="MarkdownV2")
 
     if toss_is_able():
         bot.send_message(user_id, 
