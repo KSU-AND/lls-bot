@@ -147,7 +147,7 @@ def student_wants(message):
 
     if msg_text == Answers.NICKNAME.value:
         bot.send_message(user_id, 
-                         f"Твой псевдоним: {get_nickname(user_id)}",
+                         f"Твой псевдоним: `{get_nickname(user_id)}`",
                          parse_mode="MarkdownV2",
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))
