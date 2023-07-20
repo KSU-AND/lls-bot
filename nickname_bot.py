@@ -48,13 +48,14 @@ def cmd_start(message):
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))
 
-@bot.message_handler(commands=["help"])
+@bot.message_handler(commands=["help"],
+                     func=lambda message: get_state(message.chat.id) == States.S_FULL)
 def cmd_help(message):
     user_id = message.chat.id
     friend = get_friend(user_id)
     friend = ("`" + get_nickname(friend) + "`") if friend else "пока неизвестно"
     bot.send_message(user_id,
-                     "Твои данные:\n"
+                     "*Твои данные*\n"
                      f"Имя: `{get_name(user_id)}`\n"
                      f"Псевдоним: `{get_nickname(user_id)}`\n"
                      f"Комната: `{get_room(user_id)}`\n"
@@ -78,6 +79,13 @@ def cmd_help(message):
                          "исправить имя, псевдоним или номер комнаты уже не получиться.\n\n"\
                          "Но ты всегда можешь написать во всем вопросам @mendatsium.")
     print(f"Пользователь {get_name(user_id)} вызвал HELP.")
+
+@bot.message_handler(commands=["help"])
+def cmd_help(message):
+    user_id = message.chat.id
+    bot.send_message(user_id,
+                     "Эта функция станет доступна, когда ты до конца зарегестрируешься.")
+    print(f"Пользователь {user_id} вызвал HELP еще не зарегестрировшись до конца")
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.U_ROLE)
 def user_entered_role(message):
