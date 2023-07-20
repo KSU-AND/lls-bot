@@ -65,8 +65,8 @@ def get_total_students():
 def toss_is_able():
     query_result = execute_read_query(f"SELECT friend FROM users "\
                                       f"WHERE state={States.S_FULL}")
-    friends = [row[0] for row in query_result]
-    return None in friends
+    friends = [False if row[0] else True for row in query_result]
+    return all(friends)
 
 def create_toss():
     query_result = execute_read_query(f"SELECT id FROM users "\
