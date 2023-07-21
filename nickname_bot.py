@@ -318,8 +318,9 @@ def student_wants(message):
     elif msg_text == Answers.FRIEND.value: 
         friend = get_friend(user_id)
         if friend:
-            bot.send_message(user_id, 
-                         f"Псевдоним твоего собеседника: `{get_nickname(friend)}`", 
+            friend = get_nickname(friend)
+            bot.send_message(user_id,
+                         f"Псевдоним твоего собеседника: `{get_nickname(friend)}`",
                          parse_mode="MarkdownV2",
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))
