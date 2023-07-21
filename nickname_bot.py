@@ -92,6 +92,11 @@ def cmd_help(message):
 def cmd_fix_name(message):
     user_id = message.chat.id
 
+    if not toss_is_able():
+        bot.send_message(user_id, 
+                         "Жеребьевка уже была проведена и поменять имя уже нельзя")
+        return False
+
     set_state(user_id, States.S_FIX_NAME)
     
     bot.send_message(user_id, 
@@ -128,6 +133,11 @@ def fix_name(message):
 def cmd_fix_nickname(message):
     user_id = message.chat.id
 
+    if not toss_is_able():
+        bot.send_message(user_id, 
+                         "Жеребьевка уже была проведена и поменять псевдоним уже нельзя")
+        return False
+
     set_state(user_id, States.S_FIX_NICKNAME)
     
     bot.send_message(user_id, 
@@ -162,6 +172,11 @@ def fix_nickname(message):
                      func=lambda message: get_state(message.chat.id) == States.S_FULL)
 def cmd_fix_room(message):
     user_id = message.chat.id
+
+    if not toss_is_able():
+        bot.send_message(user_id, 
+                         "Жеребьевка уже была проведена и поменять комнату уже нельзя")
+        return False
 
     set_state(user_id, States.S_FIX_ROOM)
     
