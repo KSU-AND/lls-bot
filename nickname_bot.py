@@ -104,7 +104,7 @@ def cmd_fix_name(message):
     print(f"Пользователь {get_name(user_id)} решил поменять имя.")
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.S_FIX_NAME)
-def cmd_fix_name(message):
+def fix_name(message):
     user_id = message.chat.id
     msg_text = message.text.strip()
     old_name = get_name(user_id)
@@ -119,8 +119,45 @@ def cmd_fix_name(message):
                         "момент и я его тебе напомню\. Узнать своего собеседника после "\
                         "проведения жеребьевки тоже можно будет здесь\.",
                          parse_mode="MarkdownV2",
-                         reply_markup = create_markup())
+                         reply_markup = create_markup(Answers.NICKNAME.value,
+                                                      Answers.FRIEND.value))
     print(f"Пользователь {old_name} поменял имя на {get_name(user_id)}.")
+
+@bot.message_handler(commands=["fix_nickname"],
+                     func=lambda message: get_state(message.chat.id) == States.S_FULL)
+def cmd_fix_nickname(message):
+    user_id = message.chat.id
+
+    set_state(user_id, States.S_FIX_NICKNAME)
+    
+    bot.send_message(user_id, 
+                         "*Хорошо, давай изменим твой псевдоним*\n"\
+                         f"Твой псевдоним сейчас: `{get_nickname(user_id)}`\n"\
+                         "Введи измененный псевдоним\n",
+                         parse_mode="MarkdownV2",
+                         reply_markup = create_markup())
+    print(f"Пользователь {get_name(user_id)} решил поменять псевдоним.")
+
+@bot.message_handler(func=lambda message: get_state(message.chat.id) == States.S_FIX_NICKNAME)
+def fix_nickname(message):
+    user_id = message.chat.id
+    msg_text = message.text.strip()
+    old_nickname = get_nickname(user_id)
+
+    set_state(user_id, States.S_FULL)
+    set_nickname(user_id, msg_text) 
+
+    bot.send_message(user_id, 
+                         "*Изменения сохранены*\n"\
+                         f"Твой псевдоним сейчас: `{get_nickname(user_id)}`\n\n"\
+                        "Если забудешь свой псевдоним, можешь вернуться ко мне в любой "\
+                        "момент и я его тебе напомню\. Узнать своего собеседника после "\
+                        "проведения жеребьевки тоже можно будет здесь\.",
+                         parse_mode="MarkdownV2",
+                         reply_markup = create_markup(Answers.NICKNAME.value,
+                                                      Answers.FRIEND.value))
+    print(f"Пользователь {get_name(user_id)} поменял псевдоним с {old_nickname} на {get_nickname(user_id)}.")
+
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.U_ROLE)
 def user_entered_role(message):
@@ -191,7 +228,7 @@ def user_entered_room(message):
                         "момент и я его тебе напомню. Узнать своего собеседника после "\
                         "проведения жеребьевки тоже можно будет здесь.", 
                         reply_markup = create_markup(Answers.NICKNAME.value,
-                                                    Answers.FRIEND.value))
+                                                     Answers.FRIEND.value))
     print(f"Пользователь {get_name(user_id)} ввел номер комнаты {msg_text}.")
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.A_CODE)
