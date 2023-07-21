@@ -85,7 +85,128 @@ def cmd_help(message):
     user_id = message.chat.id
     bot.send_message(user_id,
                      "Эта функция станет доступна, когда ты до конца зарегестрируешься.")
-    print(f"Пользователь {user_id} вызвал HELP еще не зарегестрировшись до конца")
+    print(f"Пользователь {user_id} вызвал HELP еще не зарегестрировшись до конца.")
+
+@bot.message_handler(commands=["fix_name"],
+                     func=lambda message: get_state(message.chat.id) == States.S_FULL)
+def cmd_fix_name(message):
+    user_id = message.chat.id
+
+    if not toss_is_able():
+        bot.send_message(user_id, 
+                         "Жеребьевка уже была проведена и поменять имя уже нельзя")
+        return False
+
+    set_state(user_id, States.S_FIX_NAME)
+    
+    bot.send_message(user_id, 
+                         "*Хорошо, давай изменим твое имя*\n"\
+                         f"Твое имя сейчас: `{get_name(user_id)}`\n"\
+                         "Введи измененные фамилию и имя\n"\
+                         "\(Их будут видеть организаторы и почтальон\)",
+                         parse_mode="MarkdownV2",
+                         reply_markup = create_markup())
+    print(f"Пользователь {get_name(user_id)} решил поменять имя.")
+
+@bot.message_handler(func=lambda message: get_state(message.chat.id) == States.S_FIX_NAME)
+def fix_name(message):
+    user_id = message.chat.id
+    msg_text = message.text.strip()
+    old_name = get_name(user_id)
+
+    set_state(user_id, States.S_FULL)
+    set_name(user_id, msg_text) 
+
+    bot.send_message(user_id, 
+                         "*Изменения сохранены*\n"\
+                         f"Твое имя сейчас: `{get_name(user_id)}`\n\n"\
+                        "Если забудешь свой псевдоним, можешь вернуться ко мне в любой "\
+                        "момент и я его тебе напомню\. Узнать своего собеседника после "\
+                        "проведения жеребьевки тоже можно будет здесь\.",
+                         parse_mode="MarkdownV2",
+                         reply_markup = create_markup(Answers.NICKNAME.value,
+                                                      Answers.FRIEND.value))
+    print(f"Пользователь {old_name} поменял имя на {get_name(user_id)}.")
+
+@bot.message_handler(commands=["fix_nickname"],
+                     func=lambda message: get_state(message.chat.id) == States.S_FULL)
+def cmd_fix_nickname(message):
+    user_id = message.chat.id
+
+    if not toss_is_able():
+        bot.send_message(user_id, 
+                         "Жеребьевка уже была проведена и поменять псевдоним уже нельзя")
+        return False
+
+    set_state(user_id, States.S_FIX_NICKNAME)
+    
+    bot.send_message(user_id, 
+                         "*Хорошо, давай изменим твой псевдоним*\n"\
+                         f"Твой псевдоним сейчас: `{get_nickname(user_id)}`\n"\
+                         "Введи измененный псевдоним\n",
+                         parse_mode="MarkdownV2",
+                         reply_markup = create_markup())
+    print(f"Пользователь {get_name(user_id)} решил поменять псевдоним.")
+
+@bot.message_handler(func=lambda message: get_state(message.chat.id) == States.S_FIX_NICKNAME)
+def fix_nickname(message):
+    user_id = message.chat.id
+    msg_text = message.text.strip()
+    old_nickname = get_nickname(user_id)
+
+    set_state(user_id, States.S_FULL)
+    set_nickname(user_id, msg_text) 
+
+    bot.send_message(user_id, 
+                         "*Изменения сохранены*\n"\
+                         f"Твой псевдоним сейчас: `{get_nickname(user_id)}`\n\n"\
+                        "Если забудешь свой псевдоним, можешь вернуться ко мне в любой "\
+                        "момент и я его тебе напомню\. Узнать своего собеседника после "\
+                        "проведения жеребьевки тоже можно будет здесь\.",
+                         parse_mode="MarkdownV2",
+                         reply_markup = create_markup(Answers.NICKNAME.value,
+                                                      Answers.FRIEND.value))
+    print(f"Пользователь {get_name(user_id)} поменял псевдоним с {old_nickname} на {get_nickname(user_id)}.")
+
+@bot.message_handler(commands=["fix_room"],
+                     func=lambda message: get_state(message.chat.id) == States.S_FULL)
+def cmd_fix_room(message):
+    user_id = message.chat.id
+
+    if not toss_is_able():
+        bot.send_message(user_id, 
+                         "Жеребьевка уже была проведена и поменять комнату уже нельзя")
+        return False
+
+    set_state(user_id, States.S_FIX_ROOM)
+    
+    bot.send_message(user_id, 
+                         "*Хорошо, давай изменим твою комнату*\n"\
+                         f"Твоя комната сейчас: `{get_room(user_id)}`\n"\
+                         "Введи измененную комнату\n",
+                         parse_mode="MarkdownV2",
+                         reply_markup = create_markup())
+    print(f"Пользователь {get_name(user_id)} решил поменять комнату.")
+
+@bot.message_handler(func=lambda message: get_state(message.chat.id) == States.S_FIX_ROOM)
+def fix_room(message):
+    user_id = message.chat.id
+    msg_text = message.text.strip()
+    old_room = get_nickname(user_id)
+
+    set_state(user_id, States.S_FULL)
+    set_room(user_id, msg_text) 
+
+    bot.send_message(user_id, 
+                         "*Изменения сохранены*\n"\
+                         f"Твоя комната сейчас: `{get_room(user_id)}`\n\n"\
+                        "Если забудешь свой псевдоним, можешь вернуться ко мне в любой "\
+                        "момент и я его тебе напомню\. Узнать своего собеседника после "\
+                        "проведения жеребьевки тоже можно будет здесь\.",
+                         parse_mode="MarkdownV2",
+                         reply_markup = create_markup(Answers.NICKNAME.value,
+                                                      Answers.FRIEND.value))
+    print(f"Пользователь {get_name(user_id)} поменял комнату с {old_room} на {get_room(user_id)}.")
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.U_ROLE)
 def user_entered_role(message):
@@ -107,7 +228,7 @@ def user_entered_role(message):
         bot.send_message(user_id, 
                          "Введите подтверждающий код:\n", 
                          reply_markup = create_markup())
-        print(f"Пользователь id_{user_id} пытается ввести код.")
+        print(f"Пользователь id_{user_id} пытается ввести код")
     else:
         bot.send_message(user_id, "Выберете, пожалуйста, одну из двух кнопок.")
 
@@ -133,6 +254,7 @@ def user_entered_nickname(message):
         bot.send_message(user_id, 
                          "К сожалению, такой псевдоним уже есть. Придумай что-то другое.", 
                          reply_markup = create_markup())
+        print(f"Пользователь {get_name(user_id)} ввел псевдоним {msg_text}, но он уже занят.")
     else:
         set_state(user_id, States.S_ROOM)
         set_nickname(user_id, msg_text) 
@@ -155,7 +277,7 @@ def user_entered_room(message):
                         "момент и я его тебе напомню. Узнать своего собеседника после "\
                         "проведения жеребьевки тоже можно будет здесь.", 
                         reply_markup = create_markup(Answers.NICKNAME.value,
-                                                    Answers.FRIEND.value))
+                                                     Answers.FRIEND.value))
     print(f"Пользователь {get_name(user_id)} ввел номер комнаты {msg_text}.")
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.A_CODE)
@@ -197,8 +319,8 @@ def student_wants(message):
         friend = get_friend(user_id)
         if friend:
             friend = get_nickname(friend)
-            bot.send_message(user_id, 
-                         f"Псевдоним твоего собеседника: `{friend}`",
+            bot.send_message(user_id,
+                         f"Псевдоним твоего собеседника: `{get_nickname(friend)}`",
                          parse_mode="MarkdownV2",
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))

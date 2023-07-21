@@ -9,6 +9,9 @@ class States(IntEnum):
     S_FULL = auto()
     A_CODE = auto()
     A_FULL = auto()
+    S_FIX_NAME = auto()
+    S_FIX_NICKNAME = auto()
+    S_FIX_ROOM = auto()
 
 class Answers(Enum):
     STUDENT = "Я участник"
