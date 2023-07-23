@@ -66,6 +66,19 @@ def cmd_help(message):
     send_cmds(user_id, toss_is_able())
     print(f"Пользователь {get_name(user_id)} вызвал HELP.")
 
+@bot.message_handler(commands=["help"],
+                     func=lambda message: get_state(message.chat.id) == States.A_FULL)
+def cmd_help(message):
+    user_id = message.chat.id
+    bot.send_message(user_id,
+                     "*Ты админ*\n"
+                     f"Кол-во зарегестрированных студентов: `{get_total_students()}`\n"
+                     f"Кол-во потенциальных участников: `{get_not_admins()}`\n",
+                     parse_mode="MarkdownV2")
+
+    send_cmds(user_id, toss_is_able())
+    print(f"admin_{user_id} вызвал HELP.")
+
 @bot.message_handler(commands=["help"])
 def cmd_help(message):
     user_id = message.chat.id

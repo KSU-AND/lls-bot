@@ -62,6 +62,11 @@ def get_total_students():
                                       f"WHERE state={States.S_FULL}")
     return len(query_result)
 
+def get_not_admins():
+    query_result = execute_read_query(f"SELECT id FROM users "\
+                                      f"WHERE state<>{States.A_FULL}")
+    return len(query_result)
+
 def toss_is_able():
     query_result = execute_read_query(f"SELECT friend FROM users "\
                                       f"WHERE state={States.S_FULL}")
