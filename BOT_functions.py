@@ -25,6 +25,7 @@ def send_cmds(user_id, isnt_toss):
                         "/fix_name - исправить имя и фамилию\n"\
                         "/fix_nickname - исправить псевдоним\n"\
                         "/fix_room - исправить номер комнаты\n\n"\
+                        "Еще есть команда /help, которая выведет это сообщение еще раз.\n\n"\
                         "Также ты всегда можешь написать во всем вопросам @mendatsium.")
     else:
         bot.send_message(user_id, 
