@@ -16,3 +16,18 @@ def create_markup(*button_names):
 def send_full_csv_file(user_id):
     with open("full_DB.csv", "rb") as csv_file:
         bot.send_document(user_id, csv_file)
+
+def send_cmds(user_id, isnt_toss):
+    if isnt_toss:
+        bot.send_message(user_id, 
+                        "Пока не была проведена жеребьевка ты можешь исправить "\
+                        "свое имя, псевдоним и номер комнаты:\n"\
+                        "/fix_name - исправить имя и фамилию\n"\
+                        "/fix_nickname - исправить псевдоним\n"\
+                        "/fix_room - исправить номер комнаты\n\n"\
+                        "Также ты всегда можешь написать во всем вопросам @mendatsium.")
+    else:
+        bot.send_message(user_id, 
+                         "Поскольку жеребьевка была уже проведена, то, к сожалению, "\
+                         "исправить имя, псевдоним или номер комнаты уже не получиться.\n\n"\
+                         "Но ты всегда можешь написать во всем вопросам @mendatsium.")

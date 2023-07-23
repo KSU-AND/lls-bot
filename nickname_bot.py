@@ -47,6 +47,7 @@ def cmd_start(message):
                          "какой псевдоним у твоего друга по переписке (если жеребьевка уже была проведена)", 
                          reply_markup = create_markup(Answers.NICKNAME.value,
                                                       Answers.FRIEND.value))
+        send_cmds(user_id, toss_is_able())
 
 @bot.message_handler(commands=["help"],
                      func=lambda message: get_state(message.chat.id) == States.S_FULL)
@@ -62,22 +63,7 @@ def cmd_help(message):
                      f"Друг по переписке: {friend}",
                      parse_mode="MarkdownV2")
 
-    if toss_is_able():
-        bot.send_message(user_id, 
-                        "Пока не была проведена жеребьевка ты можешь исправить "\
-                        "свое имя, псевдоним и номер комнаты:\n"\
-                        # "/fix_name - исправить имя и фамилию\n"\
-                        "/fix_name - _В_РАЗРАБОТКЕ_\n"\
-                        # "/fix_nickname - исправить псевдоним\n"\
-                        "/fix_nickname - _В_РАЗРАБОТКЕ_\n"\
-                        # "/fix_room - исправить номер комнаты\n\n"\
-                        "/fix_room - _В_РАЗРАБОТКЕ_\n\n"\
-                        "Также ты всегда можешь написать во всем вопросам @mendatsium.")
-    else:
-        bot.send_message(user_id, 
-                         "Поскольку жеребьевка была уже проведена, то, к сожалению, "\
-                         "исправить имя, псевдоним или номер комнаты уже не получиться.\n\n"\
-                         "Но ты всегда можешь написать во всем вопросам @mendatsium.")
+    send_cmds(user_id, toss_is_able())
     print(f"Пользователь {get_name(user_id)} вызвал HELP.")
 
 @bot.message_handler(commands=["help"])
@@ -278,6 +264,7 @@ def user_entered_room(message):
                         "проведения жеребьевки тоже можно будет здесь.", 
                         reply_markup = create_markup(Answers.NICKNAME.value,
                                                      Answers.FRIEND.value))
+    send_cmds(user_id, toss_is_able())
     print(f"Пользователь {get_name(user_id)} ввел номер комнаты {msg_text}.")
 
 @bot.message_handler(func=lambda message: get_state(message.chat.id) == States.A_CODE)
