@@ -72,8 +72,8 @@ def cmd_help(message):
     user_id = message.chat.id
     bot.send_message(user_id,
                      "*Ты админ*\n"
-                     f"Кол-во зарегестрированных студентов: `{get_total_students()}`\n"
-                     f"Кол-во потенциальных участников: `{get_not_admins()}`\n",
+                     f"Кол\-во зарегестрированных студентов: `{get_total_students()}`\n"
+                     f"Кол\-во потенциальных участников: `{get_not_admins()}`\n",
                      parse_mode="MarkdownV2")
 
     send_cmds(user_id, toss_is_able())
